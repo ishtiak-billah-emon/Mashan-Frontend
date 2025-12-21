@@ -30,13 +30,22 @@ export default function Home() {
   // Load featured products from backend
   async function loadFeatured() {
     try {
+      console.log("Fetching from:", `${API_BASE}/api/products/featured`);
       const res = await fetch(`${API_BASE}/api/products/featured`);
-      if (!res.ok) throw new Error("Failed to load featured products");
+      console.log("Response status:", res.status, res.statusText);
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("API Error Response:", errorText);
+        throw new Error(`Failed to load featured products: ${res.status} ${res.statusText}`);
+      }
       const data = await res.json();
+      console.log("Featured products loaded:", data);
       setFeaturedProducts(data);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error loading featured", err);
-      toast.error("Failed to load featured products");
+      const errorMsg = err.message || "Failed to load featured products";
+      console.error("Full error:", err);
+      toast.error(errorMsg);
     }
   }
 

@@ -55,9 +55,11 @@ export default function Shop() {
 
   // Fetch products from backend
   useEffect(() => {
+    console.log("Fetching products from:", `${API_BASE}/api/products`);
     axios
       .get(`${API_BASE}/api/products`)
       .then((res) => {
+        console.log("Products response:", res.data);
         const formatted = res.data.map(toFrontendProduct);
         // Debug: Log products to check image URLs
         console.log("Products with images:", formatted.map(p => ({ name: p.name, image: p.image })));
@@ -66,6 +68,12 @@ export default function Shop() {
       })
       .catch((err) => {
         console.error("Error fetching products:", err);
+        console.error("Error details:", {
+          message: err.message,
+          response: err.response?.data,
+          status: err.response?.status,
+          url: err.config?.url
+        });
         setLoading(false);
       });
   }, []);
