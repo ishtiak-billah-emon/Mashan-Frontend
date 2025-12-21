@@ -1,0 +1,103 @@
+import { Product } from "@/hooks/useCart";
+import productOil from "@/assets/product-oil.jpg";
+import productHoney from "@/assets/product-honey.jpg";
+import productSpices from "@/assets/product-spices.jpg";
+
+export const products: Product[] = [
+  {
+    id: "1",
+    name: "Cold-Pressed Coconut Oil",
+    price: 450,
+    image: productOil,
+    category: "Oils",
+    description: "Pure cold-pressed coconut oil extracted from organic coconuts. Rich in MCT and perfect for cooking and skincare.",
+  },
+  {
+    id: "2",
+    name: "Raw Wildflower Honey",
+    price: 550,
+    image: productHoney,
+    category: "Honey",
+    description: "Unfiltered raw honey collected from wildflower meadows. Contains natural enzymes and antioxidants.",
+  },
+  {
+    id: "3",
+    name: "Organic Turmeric Powder",
+    price: 280,
+    image: productSpices,
+    category: "Spices",
+    description: "Premium quality turmeric powder with high curcumin content. Sourced from organic farms.",
+  },
+  {
+    id: "4",
+    name: "Extra Virgin Olive Oil",
+    price: 850,
+    image: productOil,
+    category: "Oils",
+    description: "First cold-pressed extra virgin olive oil with rich flavor and health benefits.",
+  },
+  {
+    id: "5",
+    name: "Manuka Honey",
+    price: 1200,
+    image: productHoney,
+    category: "Honey",
+    description: "Premium Manuka honey with high MGO rating. Known for its antibacterial properties.",
+  },
+  {
+    id: "6",
+    name: "Garam Masala Blend",
+    price: 320,
+    image: productSpices,
+    category: "Spices",
+    description: "Authentic blend of roasted spices. Perfect for Indian cuisine.",
+  },
+  {
+    id: "7",
+    name: "Cold-Pressed Sesame Oil",
+    price: 380,
+    image: productOil,
+    category: "Oils",
+    description: "Traditional cold-pressed sesame oil rich in antioxidants and healthy fats.",
+  },
+  {
+    id: "8",
+    name: "Acacia Honey",
+    price: 650,
+    image: productHoney,
+    category: "Honey",
+    description: "Light and mild acacia honey with low glycemic index. Perfect for daily use.",
+  },
+  {
+    id: "9",
+    name: "Organic Black Pepper",
+    price: 420,
+    image: productSpices,
+    category: "Spices",
+    description: "Freshly ground organic black pepper with intense flavor and aroma.",
+  },
+  {
+    id: "10",
+    name: "Mustard Oil",
+    price: 340,
+    image: productOil,
+    category: "Oils",
+    description: "Pure cold-pressed mustard oil. Ideal for cooking and massage.",
+  },
+  {
+    id: "11",
+    name: "Forest Honey",
+    price: 580,
+    image: productHoney,
+    category: "Honey",
+    description: "Wild forest honey collected from deep forests. Rich in minerals and nutrients.",
+  },
+  {
+    id: "12",
+    name: "Cinnamon Sticks",
+    price: 380,
+    image: productSpices,
+    category: "Spices",
+    description: "Premium Ceylon cinnamon sticks with sweet and delicate flavor.",
+  },
+];
