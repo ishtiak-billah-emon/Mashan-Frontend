@@ -29,7 +29,7 @@ export function useAdminAuth() {
     console.log("📨 Sending login request →", { email, password, remember });
 
     try {
-      const res = await axios.post(`${API_BASE}/api/admin/login`, {
+      const res = await axios.post(`${API_BASE}/api/auth/login`, {
         email,
         password,
       });
@@ -37,8 +37,8 @@ export function useAdminAuth() {
       console.log("✅ Login API Response →", res.data);
 
       const token = res.data.token;
-      const loggedUser = res.data.user;
-      const loggedRole = res.data.role;
+      const loggedUser = res.data.admin;
+      const loggedRole = res.data.admin?.role || "admin";
 
       // Save if rememberMe is checked
       if (remember) {
