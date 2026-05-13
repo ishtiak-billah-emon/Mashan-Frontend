@@ -23,7 +23,8 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   const { addToCart } = useCart();
 
   const isOutOfStock = product.stock === 0;
-  const hasDiscount = product.isOnSale && product.discountAmount && product.discountAmount > 0;
+  const hasDiscount =
+    product.isOnSale && product.discountAmount && product.discountAmount > 0;
   const discountedPrice = hasDiscount
     ? product.price - (product.discountAmount || 0)
     : product.price;
@@ -38,7 +39,8 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               alt={product.name}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = "https://via.placeholder.com/400x400?text=No+Image";
+                (e.target as HTMLImageElement).src =
+                  "https://via.placeholder.com/400x400?text=No+Image";
               }}
             />
           ) : (
@@ -46,14 +48,14 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               <span className="text-muted-foreground text-sm">No Image</span>
             </div>
           )}
-          
+
           {/* ON SALE Badge */}
           {hasDiscount && (
             <div className="absolute top-3 left-3 bg-teal-500 text-white text-xs font-bold px-3 py-1 rounded-full">
               ON SALE
             </div>
           )}
-          
+
           {/* Discount Amount Badge */}
           {hasDiscount && (
             <div className="absolute top-3 right-3 bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-full border-2 border-white">
@@ -88,18 +90,28 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         <div className="flex items-center gap-2 flex-wrap">
           {hasDiscount ? (
             <>
-              <span className="text-xl font-bold text-primary">৳{discountedPrice.toFixed(2)}</span>
-              <span className="text-sm text-muted-foreground line-through">৳{product.price.toFixed(2)}</span>
+              <span className="text-xl font-bold text-primary">
+                ৳{discountedPrice.toFixed(2)}
+              </span>
+              <span className="text-sm text-muted-foreground line-through">
+                ৳{product.price.toFixed(2)}
+              </span>
             </>
           ) : (
-            <span className="text-xl font-bold text-primary">৳{product.price.toFixed(2)}</span>
+            <span className="text-xl font-bold text-primary">
+              ৳{product.price.toFixed(2)}
+            </span>
           )}
         </div>
         {product.stock === 0 && (
-          <span className="text-xs text-muted-foreground block mt-1">Out of Stock</span>
+          <span className="text-xs text-muted-foreground block mt-1">
+            Out of Stock
+          </span>
         )}
         {product.stock > 0 && product.stock < 5 && (
-          <span className="text-xs text-muted-foreground block mt-1">Only {product.stock} left</span>
+          <span className="text-xs text-muted-foreground block mt-1">
+            Only {product.stock} left
+          </span>
         )}
       </CardContent>
 

@@ -145,14 +145,17 @@ export default function OrderDetails() {
     if (!status) return [];
     return orders
       .filter((order) => order.status === status)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
   }, [orders, status]);
 
   const totalAmount = useMemo(() => {
     return filteredOrders.reduce((sum, order) => {
       const orderTotal = order.items.reduce(
         (s, item) => s + item.quantity * item.price,
-        0
+        0,
       );
       return sum + orderTotal;
     }, 0);
@@ -166,7 +169,12 @@ export default function OrderDetails() {
     );
   }
 
-  if (!status || !["delivered", "pending", "confirmed", "packaging", "cancelled"].includes(status)) {
+  if (
+    !status ||
+    !["delivered", "pending", "confirmed", "packaging", "cancelled"].includes(
+      status,
+    )
+  ) {
     return (
       <div className="p-6">
         <p className="text-muted-foreground">Invalid status</p>
@@ -193,7 +201,8 @@ export default function OrderDetails() {
           <div>
             <h1 className="text-3xl font-bold capitalize">{status} Orders</h1>
             <p className="text-muted-foreground mt-1">
-              {filteredOrders.length} {filteredOrders.length === 1 ? "order" : "orders"}
+              {filteredOrders.length}{" "}
+              {filteredOrders.length === 1 ? "order" : "orders"}
             </p>
           </div>
         </div>
@@ -211,7 +220,9 @@ export default function OrderDetails() {
             <span>
               {status} Orders ({filteredOrders.length})
             </span>
-            <span className="text-lg font-semibold">৳{totalAmount.toFixed(2)}</span>
+            <span className="text-lg font-semibold">
+              ৳{totalAmount.toFixed(2)}
+            </span>
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
@@ -238,7 +249,7 @@ export default function OrderDetails() {
                   {filteredOrders.map((order) => {
                     const orderTotal = order.items.reduce(
                       (sum, item) => sum + item.quantity * item.price,
-                      0
+                      0,
                     );
                     return (
                       <TableRow key={order._id}>
@@ -265,7 +276,8 @@ export default function OrderDetails() {
                           <div className="space-y-1">
                             {order.items.slice(0, 2).map((item, idx) => (
                               <div key={idx} className="text-xs">
-                                {item.name || item.productName || "Product"} × {item.quantity}
+                                {item.name || item.productName || "Product"} ×{" "}
+                                {item.quantity}
                               </div>
                             ))}
                             {order.items.length > 2 && (
@@ -293,4 +305,3 @@ export default function OrderDetails() {
     </div>
   );
 }
-

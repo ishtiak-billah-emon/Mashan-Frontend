@@ -2,7 +2,13 @@ import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Minus, Plus, ShoppingCart, ArrowLeft, CheckCircle2 } from "lucide-react";
+import {
+  Minus,
+  Plus,
+  ShoppingCart,
+  ArrowLeft,
+  CheckCircle2,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useCart } from "@/hooks/useCart";
@@ -127,12 +133,15 @@ export default function ProductDetail() {
               alt={product.name}
               className="w-full rounded-lg shadow-premium"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = "https://via.placeholder.com/600x600?text=No+Image";
+                (e.target as HTMLImageElement).src =
+                  "https://via.placeholder.com/600x600?text=No+Image";
               }}
             />
           ) : (
             <div className="w-full aspect-square flex items-center justify-center bg-gray-200 rounded-lg shadow-premium">
-              <span className="text-muted-foreground text-lg">No Image Available</span>
+              <span className="text-muted-foreground text-lg">
+                No Image Available
+              </span>
             </div>
           )}
 
@@ -149,10 +158,14 @@ export default function ProductDetail() {
 
         {/* Info */}
         <div>
-          <h1 className="text-4xl font-bold mb-4 text-primary">{product.name}</h1>
+          <h1 className="text-4xl font-bold mb-4 text-primary">
+            {product.name}
+          </h1>
 
           <div className="flex items-center gap-3 mb-6 flex-wrap">
-            {product.isOnSale && product.discountAmount && product.discountAmount > 0 ? (
+            {product.isOnSale &&
+            product.discountAmount &&
+            product.discountAmount > 0 ? (
               <>
                 <span className="text-4xl font-bold text-primary">
                   ৳{(product.price - product.discountAmount).toFixed(2)}
@@ -165,7 +178,9 @@ export default function ProductDetail() {
                 </span>
               </>
             ) : (
-              <span className="text-4xl font-bold text-primary">৳{product.price.toFixed(2)}</span>
+              <span className="text-4xl font-bold text-primary">
+                ৳{product.price.toFixed(2)}
+              </span>
             )}
           </div>
 
@@ -229,7 +244,12 @@ export default function ProductDetail() {
               </div>
 
               <span className="text-muted-foreground">
-                Total: ৳{((product.isOnSale && product.discountAmount ? product.price - product.discountAmount : product.price) * quantity).toFixed(2)}
+                Total: ৳
+                {(
+                  (product.isOnSale && product.discountAmount
+                    ? product.price - product.discountAmount
+                    : product.price) * quantity
+                ).toFixed(2)}
               </span>
             </div>
           </div>
@@ -258,9 +278,10 @@ export default function ProductDetail() {
           <Card className="mt-6 bg-accent/5 border-accent/20">
             <CardContent className="p-4">
               <p className="text-sm text-foreground/80">
-                ✓ Free shipping on orders above TK 999<br />
-                ✓ Easy returns within 7 days<br />
-                ✓ 100% satisfaction guaranteed
+                ✓ Free shipping on orders above TK 999
+                <br />
+                ✓ Easy returns within 7 days
+                <br />✓ 100% satisfaction guaranteed
               </p>
             </CardContent>
           </Card>

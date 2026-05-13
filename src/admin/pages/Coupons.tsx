@@ -5,7 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -97,9 +104,13 @@ export default function Coupons() {
     try {
       const token = localStorage.getItem("admin_token");
       if (editing) {
-        await axios.put(`${API_BASE}/api/admin/coupons/${editing._id}`, payload, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await axios.put(
+          `${API_BASE}/api/admin/coupons/${editing._id}`,
+          payload,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
         toast.success("Coupon updated");
       } else {
         await axios.post(`${API_BASE}/api/admin/coupons`, payload, {
@@ -151,7 +162,9 @@ export default function Coupons() {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{editing ? "Edit Coupon" : "Add Coupon"}</DialogTitle>
+              <DialogTitle>
+                {editing ? "Edit Coupon" : "Add Coupon"}
+              </DialogTitle>
               <DialogDescription>
                 Code is case-insensitive on checkout; stored in uppercase.
               </DialogDescription>
@@ -162,7 +175,9 @@ export default function Coupons() {
                 <Input
                   id="code"
                   value={form.code}
-                  onChange={(e) => setForm((p) => ({ ...p, code: e.target.value }))}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, code: e.target.value }))
+                  }
                   placeholder="FIRST50"
                   required
                 />
@@ -175,7 +190,9 @@ export default function Coupons() {
                     type="number"
                     min="0"
                     value={form.discountAmount}
-                    onChange={(e) => setForm((p) => ({ ...p, discountAmount: e.target.value }))}
+                    onChange={(e) =>
+                      setForm((p) => ({ ...p, discountAmount: e.target.value }))
+                    }
                     required
                   />
                 </div>
@@ -186,7 +203,9 @@ export default function Coupons() {
                     type="number"
                     min="0"
                     value={form.remainingUses}
-                    onChange={(e) => setForm((p) => ({ ...p, remainingUses: e.target.value }))}
+                    onChange={(e) =>
+                      setForm((p) => ({ ...p, remainingUses: e.target.value }))
+                    }
                     required
                   />
                 </div>
@@ -195,12 +214,18 @@ export default function Coupons() {
                 <Switch
                   id="isActive"
                   checked={form.isActive}
-                  onCheckedChange={(checked) => setForm((p) => ({ ...p, isActive: checked }))}
+                  onCheckedChange={(checked) =>
+                    setForm((p) => ({ ...p, isActive: checked }))
+                  }
                 />
                 <Label htmlFor="isActive">Active</Label>
               </div>
               <DialogFooter>
-                <Button variant="outline" type="button" onClick={() => setIsDialogOpen(false)}>
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => setIsDialogOpen(false)}
+                >
                   Cancel
                 </Button>
                 <Button type="submit">{editing ? "Update" : "Create"}</Button>
@@ -216,7 +241,9 @@ export default function Coupons() {
         </CardHeader>
         <CardContent>
           {coupons.length === 0 ? (
-            <div className="text-center text-muted-foreground py-6">No coupons yet</div>
+            <div className="text-center text-muted-foreground py-6">
+              No coupons yet
+            </div>
           ) : (
             <div className="rounded-md border">
               <Table>
@@ -232,13 +259,17 @@ export default function Coupons() {
                 <TableBody>
                   {coupons.map((coupon) => (
                     <TableRow key={coupon._id}>
-                      <TableCell className="font-semibold">{coupon.code}</TableCell>
+                      <TableCell className="font-semibold">
+                        {coupon.code}
+                      </TableCell>
                       <TableCell>৳{coupon.discountAmount}</TableCell>
                       <TableCell>{coupon.remainingUses}</TableCell>
                       <TableCell>
                         <span
                           className={`px-2 py-1 rounded text-xs ${
-                            coupon.isActive ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
+                            coupon.isActive
+                              ? "bg-green-100 text-green-800"
+                              : "bg-gray-100 text-gray-800"
                           }`}
                         >
                           {coupon.isActive ? "Active" : "Inactive"}
@@ -246,10 +277,18 @@ export default function Coupons() {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <Button size="sm" variant="outline" onClick={() => openDialog(coupon)}>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => openDialog(coupon)}
+                          >
                             <Edit2 className="h-4 w-4" />
                           </Button>
-                          <Button size="sm" variant="destructive" onClick={() => handleDelete(coupon._id)}>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => handleDelete(coupon._id)}
+                          >
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
@@ -265,4 +304,3 @@ export default function Coupons() {
     </div>
   );
 }
-

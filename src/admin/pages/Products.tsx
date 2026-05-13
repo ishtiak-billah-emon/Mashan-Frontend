@@ -46,13 +46,15 @@ export default function Products() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [stockUpdates, setStockUpdates] = useState<{ [key: string]: number }>({});
+  const [stockUpdates, setStockUpdates] = useState<{ [key: string]: number }>(
+    {},
+  );
   const [imagePreview, setImagePreview] = useState<string>("");
   const [uploading, setUploading] = useState(false);
 
   // Extract unique categories from products
   const existingCategories = Array.from(
-    new Set(products.map((p) => p.category).filter(Boolean))
+    new Set(products.map((p) => p.category).filter(Boolean)),
   ).sort();
 
   const [formData, setFormData] = useState({
@@ -98,7 +100,11 @@ export default function Products() {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -130,7 +136,7 @@ export default function Products() {
     setUploading(true);
     try {
       const token = localStorage.getItem("admin_token");
-      
+
       if (!token) {
         toast.error("Please login to upload images");
         setUploading(false);
@@ -155,8 +161,8 @@ export default function Products() {
       }
     } catch (error: any) {
       console.error("Error uploading image:", error);
-      const errorMessage = 
-        error?.response?.data?.message || 
+      const errorMessage =
+        error?.response?.data?.message ||
         error?.response?.data?.error ||
         error?.message ||
         "Failed to upload image. Please check your connection and try again.";
@@ -176,7 +182,12 @@ export default function Products() {
     e.preventDefault();
 
     // Validation
-    if (!formData.name || !formData.price || !formData.category || formData.stock === "") {
+    if (
+      !formData.name ||
+      !formData.price ||
+      !formData.category ||
+      formData.stock === ""
+    ) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -191,7 +202,9 @@ export default function Products() {
       const payload = {
         name: formData.name,
         price: Number(formData.price),
-        buyingPrice: formData.buyingPrice ? Number(formData.buyingPrice) : undefined,
+        buyingPrice: formData.buyingPrice
+          ? Number(formData.buyingPrice)
+          : undefined,
         image: formData.image,
         category: formData.category,
         description: formData.description,
@@ -208,7 +221,7 @@ export default function Products() {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         toast.success("Product updated successfully");
       } else {
@@ -288,7 +301,7 @@ export default function Products() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       toast.success("Stock updated successfully");
       setStockUpdates((prev) => {
@@ -396,9 +409,7 @@ export default function Products() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="buyingPrice">
-                      Buying Price (৳)
-                    </Label>
+                    <Label htmlFor="buyingPrice">Buying Price (৳)</Label>
                     <Input
                       id="buyingPrice"
                       name="buyingPrice"
@@ -469,7 +480,9 @@ export default function Products() {
                         className="cursor-pointer"
                       />
                       {uploading && (
-                        <span className="text-sm text-muted-foreground">Uploading...</span>
+                        <span className="text-sm text-muted-foreground">
+                          Uploading...
+                        </span>
                       )}
                     </div>
                     {(imagePreview || formData.image) && (
@@ -567,7 +580,9 @@ export default function Products() {
         <CardContent>
           {filteredProducts.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              {searchQuery ? "No products found matching your search" : "No products found"}
+              {searchQuery
+                ? "No products found matching your search"
+                : "No products found"}
             </div>
           ) : (
             <div className="rounded-md border">
@@ -587,8 +602,12 @@ export default function Products() {
                 <TableBody>
                   {filteredProducts.map((product) => (
                     <TableRow key={product._id}>
-                      <TableCell className="font-medium">{product.name}</TableCell>
-                      <TableCell className="uppercase">{product.category}</TableCell>
+                      <TableCell className="font-medium">
+                        {product.name}
+                      </TableCell>
+                      <TableCell className="uppercase">
+                        {product.category}
+                      </TableCell>
                       <TableCell>৳{product.price}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
@@ -623,7 +642,9 @@ export default function Products() {
                             }}
                           />
                         ) : (
-                          <span className="text-muted-foreground text-sm">No image</span>
+                          <span className="text-muted-foreground text-sm">
+                            No image
+                          </span>
                         )}
                       </TableCell>
                       <TableCell className="max-w-xs truncate">
@@ -641,7 +662,9 @@ export default function Products() {
                               </span>
                             ))
                           ) : (
-                            <span className="text-muted-foreground text-sm">None</span>
+                            <span className="text-muted-foreground text-sm">
+                              None
+                            </span>
                           )}
                           {product.benefits && product.benefits.length > 2 && (
                             <span className="text-xs text-muted-foreground">
@@ -679,4 +702,3 @@ export default function Products() {
     </div>
   );
 }
-

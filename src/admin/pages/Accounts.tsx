@@ -63,7 +63,12 @@ function MiniLineChart({ points }: { points: number[] }) {
     .map((v, i) => `${i * step},${height - (v / max) * height}`)
     .join(" ");
   return (
-    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} aria-hidden>
+    <svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      aria-hidden
+    >
       <polyline fill="none" stroke="#06b6d4" strokeWidth={2} points={coords} />
       {points.map((v, i) => {
         const cx = i * step;
@@ -190,8 +195,14 @@ export default function Accounts() {
     let totalQty = 0;
     let totalAmount = 0;
     let totalProfit = 0;
-    const byCategory = new Map<string, { quantity: number; amount: number; profit: number }>();
-    const byProduct = new Map<string, { quantity: number; amount: number; profit: number; category: string }>();
+    const byCategory = new Map<
+      string,
+      { quantity: number; amount: number; profit: number }
+    >();
+    const byProduct = new Map<
+      string,
+      { quantity: number; amount: number; profit: number; category: string }
+    >();
 
     for (const o of salesOrders) {
       for (const it of o.items) {
@@ -200,21 +211,31 @@ export default function Accounts() {
         totalAmount += itemAmount;
 
         // Calculate profit: (selling price - buying price) * quantity
-        const buyingPrice = it.productId ? productBuyingPriceMap.get(it.productId) || 0 : 0;
+        const buyingPrice = it.productId
+          ? productBuyingPriceMap.get(it.productId) || 0
+          : 0;
         const itemProfit = (it.price - buyingPrice) * it.quantity;
         totalProfit += itemProfit;
 
         const categoryKey = it.category || "Uncategorized";
         const productKey = it.productName || it.name || "Unnamed Product";
 
-        const c = byCategory.get(categoryKey) ?? { quantity: 0, amount: 0, profit: 0 };
+        const c = byCategory.get(categoryKey) ?? {
+          quantity: 0,
+          amount: 0,
+          profit: 0,
+        };
         c.quantity += it.quantity;
         c.amount += itemAmount;
         c.profit += itemProfit;
         byCategory.set(categoryKey, c);
 
-        const p =
-          byProduct.get(productKey) ?? { quantity: 0, amount: 0, profit: 0, category: categoryKey };
+        const p = byProduct.get(productKey) ?? {
+          quantity: 0,
+          amount: 0,
+          profit: 0,
+          category: categoryKey,
+        };
         p.quantity += it.quantity;
         p.amount += itemAmount;
         p.profit += itemProfit;
@@ -301,7 +322,10 @@ export default function Accounts() {
 
   // Order Details by Status
   const orderDetailsByStatus = useMemo(() => {
-    const statusGroups: Record<string, { orders: Order[]; count: number; total: number }> = {
+    const statusGroups: Record<
+      string,
+      { orders: Order[]; count: number; total: number }
+    > = {
       delivered: { orders: [], count: 0, total: 0 },
       pending: { orders: [], count: 0, total: 0 },
       confirmed: { orders: [], count: 0, total: 0 },
@@ -312,7 +336,10 @@ export default function Accounts() {
     orders.forEach((order) => {
       const status = order.status || "pending";
       if (statusGroups[status]) {
-        const orderTotal = order.items.reduce((sum, item) => sum + item.quantity * item.price, 0);
+        const orderTotal = order.items.reduce(
+          (sum, item) => sum + item.quantity * item.price,
+          0,
+        );
         statusGroups[status].orders.push(order);
         statusGroups[status].count += 1;
         statusGroups[status].total += orderTotal;
@@ -322,7 +349,8 @@ export default function Accounts() {
     // Sort orders by date (newest first) within each status
     Object.keys(statusGroups).forEach((status) => {
       statusGroups[status].orders.sort(
-        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       );
     });
 
@@ -430,7 +458,9 @@ export default function Accounts() {
               onClick={() => navigate(`/admin/order-details/${status}`)}
             >
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium capitalize">{status}</CardTitle>
+                <CardTitle className="text-sm font-medium capitalize">
+                  {status}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold mb-1">{data.count}</div>
@@ -460,7 +490,9 @@ export default function Accounts() {
         </div>
         <div className="p-4 border rounded bg-white">
           <div className="text-sm text-gray-500">Total Sales Amount</div>
-          <div className="text-2xl font-semibold">৳{totals.totalAmount.toFixed(2)}</div>
+          <div className="text-2xl font-semibold">
+            ৳{totals.totalAmount.toFixed(2)}
+          </div>
         </div>
         <div className="p-4 border rounded bg-white">
           <div className="text-sm text-gray-500">Total Profit</div>
@@ -478,7 +510,8 @@ export default function Accounts() {
             ৳{channelSplit.offline.amount.toFixed(2)}
           </div>
           <div className="text-xs text-gray-500">
-            {channelSplit.offline.orders} orders · {channelSplit.offline.quantity} items
+            {channelSplit.offline.orders} orders ·{" "}
+            {channelSplit.offline.quantity} items
           </div>
         </div>
       </div>
@@ -487,19 +520,25 @@ export default function Accounts() {
         <div className="p-4 border rounded bg-white space-y-1">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold">Online sales (website)</h3>
-            <span className="text-lg font-semibold">৳{channelSplit.online.amount.toFixed(2)}</span>
+            <span className="text-lg font-semibold">
+              ৳{channelSplit.online.amount.toFixed(2)}
+            </span>
           </div>
           <p className="text-xs text-gray-500">
-            Delivered website orders · {channelSplit.online.orders} orders · {channelSplit.online.quantity} items
+            Delivered website orders · {channelSplit.online.orders} orders ·{" "}
+            {channelSplit.online.quantity} items
           </p>
         </div>
         <div className="p-4 border rounded bg-white space-y-1">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold">Offline sales (manual)</h3>
-            <span className="text-lg font-semibold">৳{channelSplit.offline.amount.toFixed(2)}</span>
+            <span className="text-lg font-semibold">
+              ৳{channelSplit.offline.amount.toFixed(2)}
+            </span>
           </div>
           <p className="text-xs text-gray-500">
-            Confirmed manual orders · {channelSplit.offline.orders} orders · {channelSplit.offline.quantity} items
+            Confirmed manual orders · {channelSplit.offline.orders} orders ·{" "}
+            {channelSplit.offline.quantity} items
           </p>
         </div>
       </div>
@@ -508,7 +547,9 @@ export default function Accounts() {
         <div className="p-4 border rounded bg-white space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="font-semibold">Sales Trend (last 7 days)</h2>
-            <div className="text-sm text-gray-500">Total: ৳{last7.reduce((a, b) => a + b, 0).toFixed(2)}</div>
+            <div className="text-sm text-gray-500">
+              Total: ৳{last7.reduce((a, b) => a + b, 0).toFixed(2)}
+            </div>
           </div>
           <MiniLineChart points={last7} />
         </div>
@@ -516,7 +557,9 @@ export default function Accounts() {
         <div className="p-4 border rounded bg-white space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="font-semibold">Sales Trend (last 28 days)</h2>
-            <div className="text-sm text-gray-500">Total: ৳{last28.reduce((a, b) => a + b, 0).toFixed(2)}</div>
+            <div className="text-sm text-gray-500">
+              Total: ৳{last28.reduce((a, b) => a + b, 0).toFixed(2)}
+            </div>
           </div>
           <MiniLineChart points={last28} />
         </div>
@@ -547,7 +590,9 @@ export default function Accounts() {
                     <td className="py-2">{c.category}</td>
                     <td className="py-2 text-right">{c.quantity}</td>
                     <td className="py-2 text-right">৳{c.amount.toFixed(2)}</td>
-                    <td className="py-2 text-right text-green-600">৳{c.profit.toFixed(2)}</td>
+                    <td className="py-2 text-right text-green-600">
+                      ৳{c.profit.toFixed(2)}
+                    </td>
                   </tr>
                 ))
               )}
@@ -570,7 +615,9 @@ export default function Accounts() {
                   <span className="text-right">
                     <div>Qty: {p.quantity}</div>
                     <div>৳{p.amount.toFixed(2)}</div>
-                    <div className="text-xs text-green-600">Profit: ৳{p.profit.toFixed(2)}</div>
+                    <div className="text-xs text-green-600">
+                      Profit: ৳{p.profit.toFixed(2)}
+                    </div>
                   </span>
                 </li>
               ))
@@ -580,7 +627,9 @@ export default function Accounts() {
       </div>
 
       <div className="p-4 border rounded bg-white">
-        <h3 className="font-semibold mb-3">Sales Orders (delivered online + offline)</h3>
+        <h3 className="font-semibold mb-3">
+          Sales Orders (delivered online + offline)
+        </h3>
         <div className="overflow-auto">
           <table className="w-full text-left text-sm">
             <thead>
@@ -600,13 +649,18 @@ export default function Accounts() {
                     No sales orders in this range
                   </td>
                 </tr>
-                ) : (
+              ) : (
                 salesOrders.slice(0, 50).map((o) => {
-                  const amt = o.items.reduce((s, it) => s + it.quantity * it.price, 0);
+                  const amt = o.items.reduce(
+                    (s, it) => s + it.quantity * it.price,
+                    0,
+                  );
                   return (
                     <tr key={o._id} className="border-t">
                       <td className="py-2 font-medium">{o.orderId || o._id}</td>
-                      <td className="py-2">{new Date(o.createdAt).toLocaleString()}</td>
+                      <td className="py-2">
+                        {new Date(o.createdAt).toLocaleString()}
+                      </td>
                       <td className="py-2">
                         <span
                           className={`rounded-full px-3 py-1 text-xs font-semibold ${
@@ -621,13 +675,20 @@ export default function Accounts() {
                       <td className="py-2 capitalize text-sm">{o.status}</td>
                       <td className="py-2">
                         {o.items.map((it, idx) => (
-                          <div key={it._id || `${it.name || it.productName}-${idx}`} className="text-xs">
-                            {(it.name || it.productName || "Product")} × {it.quantity} (
-                            {it.category || "Uncategorized"})
+                          <div
+                            key={
+                              it._id || `${it.name || it.productName}-${idx}`
+                            }
+                            className="text-xs"
+                          >
+                            {it.name || it.productName || "Product"} ×{" "}
+                            {it.quantity} ({it.category || "Uncategorized"})
                           </div>
                         ))}
                       </td>
-                      <td className="py-2 text-right font-semibold">₹{amt.toFixed(2)}</td>
+                      <td className="py-2 text-right font-semibold">
+                        ₹{amt.toFixed(2)}
+                      </td>
                     </tr>
                   );
                 })

@@ -29,7 +29,11 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import {
   API_BASE,
@@ -76,7 +80,9 @@ const createEmptyItem = (): ManualOrderFormItem => ({
 
 export default function ManualOrder() {
   const [consumer, setConsumer] = useState(emptyConsumer);
-  const [items, setItems] = useState<ManualOrderFormItem[]>([createEmptyItem()]);
+  const [items, setItems] = useState<ManualOrderFormItem[]>([
+    createEmptyItem(),
+  ]);
   const [shipping, setShipping] = useState("0");
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [note, setNote] = useState("");
@@ -84,7 +90,9 @@ export default function ManualOrder() {
   const [fetchingOrders, setFetchingOrders] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [downloadingPosId, setDownloadingPosId] = useState<string | null>(null);
-  const productSearchCache = useRef<Map<string, AdminProductOption[]>>(new Map());
+  const productSearchCache = useRef<Map<string, AdminProductOption[]>>(
+    new Map(),
+  );
   const productSearchController = useRef<AbortController | null>(null);
 
   const loadManualOrders = useCallback(async () => {
@@ -121,18 +129,24 @@ export default function ManualOrder() {
         if (!item.productName || !item.category) return sum;
         return sum + Number(item.quantity || 0) * Number(item.price || 0);
       }, 0),
-    [items]
+    [items],
   );
-  const total = useMemo(() => subtotal + Number(shipping || 0), [shipping, subtotal]);
+  const total = useMemo(
+    () => subtotal + Number(shipping || 0),
+    [shipping, subtotal],
+  );
 
   const stats = useMemo(() => {
     return manualOrders.reduce(
       (acc, order) => {
         acc.amount += order.total;
-        acc.quantity += order.items.reduce((sum, item) => sum + item.quantity, 0);
+        acc.quantity += order.items.reduce(
+          (sum, item) => sum + item.quantity,
+          0,
+        );
         return acc;
       },
-      { amount: 0, quantity: 0 }
+      { amount: 0, quantity: 0 },
     );
   }, [manualOrders]);
 
@@ -144,7 +158,7 @@ export default function ManualOrder() {
   const handleItemChange = (
     index: number,
     field: keyof ManualOrderFormItem,
-    value: string | number
+    value: string | number,
   ) => {
     setItems((prev) =>
       prev.map((item, i) => {
@@ -170,104 +184,111 @@ export default function ManualOrder() {
         }
 
         return { ...item, [field]: value };
-      })
+      }),
     );
   };
 
-  const handleProductSelect = useCallback((index: number, product: AdminProductOption) => {
-    setItems((prev) =>
-      prev.map((item, i) => {
-        if (i !== index) return item;
+  const handleProductSelect = useCallback(
+    (index: number, product: AdminProductOption) => {
+      setItems((prev) =>
+        prev.map((item, i) => {
+          if (i !== index) return item;
 
-        const stock =
-          typeof product.stock === "number" && !Number.isNaN(product.stock)
-            ? product.stock
-            : undefined;
-        const baseQuantity = Math.max(1, item.quantity || 1);
-        const adjustedQuantity =
-          stock !== undefined ? (stock > 0 ? Math.min(baseQuantity, stock) : 1) : baseQuantity;
+          const stock =
+            typeof product.stock === "number" && !Number.isNaN(product.stock)
+              ? product.stock
+              : undefined;
+          const baseQuantity = Math.max(1, item.quantity || 1);
+          const adjustedQuantity =
+            stock !== undefined
+              ? stock > 0
+                ? Math.min(baseQuantity, stock)
+                : 1
+              : baseQuantity;
 
-        const resolvedPrice =
-          typeof product.price === "number" && !Number.isNaN(product.price)
-            ? product.price
-            : item.price;
+          const resolvedPrice =
+            typeof product.price === "number" && !Number.isNaN(product.price)
+              ? product.price
+              : item.price;
 
-        const resolvedBuyingPrice =
-          typeof product.buyingPrice === "number" && !Number.isNaN(product.buyingPrice)
-            ? product.buyingPrice
-            : item.buyingPrice || 0;
+          const resolvedBuyingPrice =
+            typeof product.buyingPrice === "number" &&
+            !Number.isNaN(product.buyingPrice)
+              ? product.buyingPrice
+              : item.buyingPrice || 0;
 
-        return {
-          ...item,
-          productId: product._id,
-          productName: product.name,
-          category: product.category || "",
-          price: resolvedPrice,
-          buyingPrice: resolvedBuyingPrice,
-          quantity: adjustedQuantity,
-          productStock: stock,
-        };
-      })
-    );
-  }, []);
-
-  const searchProducts = useCallback(
-    async (query: string) => {
-      const token = localStorage.getItem("admin_token");
-      if (!token) {
-        toast.error("Admin session expired. Please log in again.");
-        return [];
-      }
-
-      const trimmedQuery = query.trim();
-      if (!trimmedQuery || trimmedQuery.length < 2) {
-        return [];
-      }
-
-      if (productSearchCache.current.has(trimmedQuery)) {
-        return productSearchCache.current.get(trimmedQuery)!;
-      }
-
-      try {
-        productSearchController.current?.abort();
-        const controller = new AbortController();
-        productSearchController.current = controller;
-
-        const response = await fetch(
-          `${API_BASE}/api/admin/products/search?q=${encodeURIComponent(trimmedQuery)}&limit=20`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            signal: controller.signal,
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to search products");
-        }
-
-        const data = (await response.json()) as AdminProductOption[];
-        productSearchCache.current.set(trimmedQuery, data);
-        return data;
-      } catch (error: any) {
-        if (error?.name === "AbortError") {
-          return [];
-        }
-        console.error("Product search error:", error);
-        toast.error(error?.message || "Unable to search products");
-        return [];
-      } finally {
-        productSearchController.current = null;
-      }
+          return {
+            ...item,
+            productId: product._id,
+            productName: product.name,
+            category: product.category || "",
+            price: resolvedPrice,
+            buyingPrice: resolvedBuyingPrice,
+            quantity: adjustedQuantity,
+            productStock: stock,
+          };
+        }),
+      );
     },
-    []
+    [],
   );
+
+  const searchProducts = useCallback(async (query: string) => {
+    const token = localStorage.getItem("admin_token");
+    if (!token) {
+      toast.error("Admin session expired. Please log in again.");
+      return [];
+    }
+
+    const trimmedQuery = query.trim();
+    if (!trimmedQuery || trimmedQuery.length < 2) {
+      return [];
+    }
+
+    if (productSearchCache.current.has(trimmedQuery)) {
+      return productSearchCache.current.get(trimmedQuery)!;
+    }
+
+    try {
+      productSearchController.current?.abort();
+      const controller = new AbortController();
+      productSearchController.current = controller;
+
+      const response = await fetch(
+        `${API_BASE}/api/admin/products/search?q=${encodeURIComponent(trimmedQuery)}&limit=20`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          signal: controller.signal,
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to search products");
+      }
+
+      const data = (await response.json()) as AdminProductOption[];
+      productSearchCache.current.set(trimmedQuery, data);
+      return data;
+    } catch (error: any) {
+      if (error?.name === "AbortError") {
+        return [];
+      }
+      console.error("Product search error:", error);
+      toast.error(error?.message || "Unable to search products");
+      return [];
+    } finally {
+      productSearchController.current = null;
+    }
+  }, []);
 
   const addItemRow = () => setItems((prev) => [...prev, createEmptyItem()]);
 
   const removeItemRow = (index: number) => {
-    setItems((prev) => (prev.length === 1 ? prev : prev.filter((_, i) => i !== index)));
+    setItems((prev) =>
+      prev.length === 1 ? prev : prev.filter((_, i) => i !== index),
+    );
   };
 
   const resetForm = () => {
@@ -296,7 +317,10 @@ export default function ManualOrder() {
     }
 
     const formattedItems = items
-      .filter((item) => item.productId && item.productName?.trim() && item.category.trim())
+      .filter(
+        (item) =>
+          item.productId && item.productName?.trim() && item.category.trim(),
+      )
       .map(({ productStock, ...item }) => ({
         productId: item.productId!,
         productName: item.productName?.trim() || "",
@@ -314,14 +338,14 @@ export default function ManualOrder() {
       (item) =>
         item.productId &&
         typeof item.productStock === "number" &&
-        item.quantity > item.productStock
+        item.quantity > item.productStock,
     );
 
     if (stockIssue) {
       toast.error(
         `Only ${stockIssue.productStock} units available for ${
           stockIssue.productName || "the selected product"
-        }`
+        }`,
       );
       return;
     }
@@ -369,11 +393,14 @@ export default function ManualOrder() {
 
     try {
       setDownloadingPosId(orderId);
-      const response = await fetch(`${API_BASE}/api/admin/orders/${orderId}/pos`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `${API_BASE}/api/admin/orders/${orderId}/pos`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Failed to download POS");
@@ -402,12 +429,17 @@ export default function ManualOrder() {
         <div>
           <h1 className="text-3xl font-bold">Manual / Offline Orders</h1>
           <p className="text-sm text-muted-foreground">
-            Record walk-in, phone or WhatsApp orders. All manual entries get a confirmed status.
+            Record walk-in, phone or WhatsApp orders. All manual entries get a
+            confirmed status.
           </p>
         </div>
         <div className="rounded border p-3 text-right">
-          <div className="text-xs uppercase text-gray-500">Offline revenue (all time)</div>
-          <div className="text-2xl font-semibold">৳{stats.amount.toFixed(2)}</div>
+          <div className="text-xs uppercase text-gray-500">
+            Offline revenue (all time)
+          </div>
+          <div className="text-2xl font-semibold">
+            ৳{stats.amount.toFixed(2)}
+          </div>
           <div className="text-xs text-gray-500">
             {manualOrders.length} orders · {stats.quantity} items
           </div>
@@ -424,7 +456,12 @@ export default function ManualOrder() {
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="name">Customer Name *</Label>
-                  <Input id="name" name="name" value={consumer.name} onChange={handleConsumerChange} />
+                  <Input
+                    id="name"
+                    name="name"
+                    value={consumer.name}
+                    onChange={handleConsumerChange}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone *</Label>
@@ -447,7 +484,12 @@ export default function ManualOrder() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="city">City *</Label>
-                  <Input id="city" name="city" value={consumer.city} onChange={handleConsumerChange} />
+                  <Input
+                    id="city"
+                    name="city"
+                    value={consumer.city}
+                    onChange={handleConsumerChange}
+                  />
                 </div>
                 <div className="space-y-2 md:col-span-2">
                   <Label htmlFor="address">Address *</Label>
@@ -457,7 +499,10 @@ export default function ManualOrder() {
                     rows={2}
                     value={consumer.address}
                     onChange={(e) =>
-                      setConsumer((prev) => ({ ...prev, address: e.target.value }))
+                      setConsumer((prev) => ({
+                        ...prev,
+                        address: e.target.value,
+                      }))
                     }
                   />
                 </div>
@@ -466,7 +511,12 @@ export default function ManualOrder() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label>Order Items *</Label>
-                  <Button type="button" variant="outline" size="sm" onClick={addItemRow}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addItemRow}
+                  >
                     + Add product
                   </Button>
                 </div>
@@ -477,36 +527,54 @@ export default function ManualOrder() {
                       className="rounded border p-3 space-y-3 md:space-y-0 md:grid md:grid-cols-12 md:items-start md:gap-2"
                     >
                       <div className="space-y-1 md:col-span-3">
-                        <Label className="text-xs text-muted-foreground">Product</Label>
+                        <Label className="text-xs text-muted-foreground">
+                          Product
+                        </Label>
                         <ProductCombobox
                           item={item}
-                          onSelect={(product) => handleProductSelect(index, product)}
+                          onSelect={(product) =>
+                            handleProductSelect(index, product)
+                          }
                           searchProducts={searchProducts}
                         />
                       </div>
                       <div className="space-y-1 md:col-span-2">
-                        <Label className="text-xs text-muted-foreground">Category</Label>
+                        <Label className="text-xs text-muted-foreground">
+                          Category
+                        </Label>
                         <Input
                           value={item.category}
-                          onChange={(e) => handleItemChange(index, "category", e.target.value)}
+                          onChange={(e) =>
+                            handleItemChange(index, "category", e.target.value)
+                          }
                           placeholder="Auto-filled after selecting product"
                           disabled={!item.productId}
                         />
                       </div>
                       <div className="space-y-1 md:col-span-1">
-                        <Label className="text-xs text-muted-foreground">Quantity</Label>
+                        <Label className="text-xs text-muted-foreground">
+                          Quantity
+                        </Label>
                         <Input
                           type="number"
                           min={1}
                           value={item.quantity}
                           disabled={!item.productId}
-                          onChange={(e) => handleItemChange(index, "quantity", Number(e.target.value))}
+                          onChange={(e) =>
+                            handleItemChange(
+                              index,
+                              "quantity",
+                              Number(e.target.value),
+                            )
+                          }
                         />
                         {typeof item.productStock === "number" && (
                           <p
                             className={cn(
                               "text-xs",
-                              item.quantity > item.productStock ? "text-destructive" : "text-muted-foreground"
+                              item.quantity > item.productStock
+                                ? "text-destructive"
+                                : "text-muted-foreground",
                             )}
                           >
                             In stock: {item.productStock}
@@ -514,30 +582,51 @@ export default function ManualOrder() {
                         )}
                       </div>
                       <div className="space-y-1 md:col-span-2">
-                        <Label className="text-xs text-muted-foreground">Unit Price (৳)</Label>
+                        <Label className="text-xs text-muted-foreground">
+                          Unit Price (৳)
+                        </Label>
                         <Input
                           type="number"
                           min={0}
                           value={item.price}
                           disabled={!item.productId}
-                          onChange={(e) => handleItemChange(index, "price", Number(e.target.value))}
+                          onChange={(e) =>
+                            handleItemChange(
+                              index,
+                              "price",
+                              Number(e.target.value),
+                            )
+                          }
                         />
                       </div>
                       <div className="space-y-1 md:col-span-2">
-                        <Label className="text-xs text-muted-foreground">Base Price (৳)</Label>
+                        <Label className="text-xs text-muted-foreground">
+                          Base Price (৳)
+                        </Label>
                         <Input
                           type="number"
                           min={0}
                           value={item.buyingPrice || 0}
                           disabled={!item.productId}
-                          onChange={(e) => handleItemChange(index, "buyingPrice", Number(e.target.value))}
+                          onChange={(e) =>
+                            handleItemChange(
+                              index,
+                              "buyingPrice",
+                              Number(e.target.value),
+                            )
+                          }
                           placeholder="Buying price"
                         />
-                        <p className="text-xs text-muted-foreground">For profit calculation</p>
+                        <p className="text-xs text-muted-foreground">
+                          For profit calculation
+                        </p>
                       </div>
                       <div className="flex items-end justify-between gap-2 md:col-span-2">
                         <div className="text-sm font-semibold">
-                          ৳{(Number(item.quantity || 0) * Number(item.price || 0)).toFixed(2)}
+                          ৳
+                          {(
+                            Number(item.quantity || 0) * Number(item.price || 0)
+                          ).toFixed(2)}
                         </div>
                         {items.length > 1 && (
                           <Button
@@ -567,7 +656,10 @@ export default function ManualOrder() {
                 </div>
                 <div className="space-y-2">
                   <Label>Payment Method</Label>
-                  <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                  <Select
+                    value={paymentMethod}
+                    onValueChange={setPaymentMethod}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select payment" />
                     </SelectTrigger>
@@ -581,20 +673,34 @@ export default function ManualOrder() {
                 </div>
                 <div className="space-y-2">
                   <Label>Notes</Label>
-                  <Input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Optional" />
+                  <Input
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                    placeholder="Optional"
+                  />
                 </div>
               </div>
 
               <div className="flex flex-col gap-3 rounded border bg-slate-50 p-4 md:flex-row md:items-center md:justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Subtotal</p>
-                  <p className="text-xl font-semibold">৳{subtotal.toFixed(2)}</p>
+                  <p className="text-xl font-semibold">
+                    ৳{subtotal.toFixed(2)}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Total (incl. shipping)</p>
-                  <p className="text-2xl font-bold text-primary">৳{total.toFixed(2)}</p>
+                  <p className="text-sm text-muted-foreground">
+                    Total (incl. shipping)
+                  </p>
+                  <p className="text-2xl font-bold text-primary">
+                    ৳{total.toFixed(2)}
+                  </p>
                 </div>
-                <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
+                <Button
+                  type="submit"
+                  className="w-full md:w-auto"
+                  disabled={isSubmitting}
+                >
                   {isSubmitting ? "Saving..." : "Save Manual Order"}
                 </Button>
               </div>
@@ -616,14 +722,19 @@ export default function ManualOrder() {
               <p className="text-2xl font-semibold">{stats.quantity}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Average ticket size</p>
+              <p className="text-sm text-muted-foreground">
+                Average ticket size
+              </p>
               <p className="text-2xl font-semibold">
-                ৳{manualOrders.length ? (stats.amount / manualOrders.length).toFixed(2) : "0.00"}
+                ৳
+                {manualOrders.length
+                  ? (stats.amount / manualOrders.length).toFixed(2)
+                  : "0.00"}
               </p>
             </div>
             <p className="text-xs text-gray-500">
-              Metrics update automatically from the offline orders saved in the database, so everyone on the
-              admin team sees the same numbers.
+              Metrics update automatically from the offline orders saved in the
+              database, so everyone on the admin team sees the same numbers.
             </p>
           </CardContent>
         </Card>
@@ -635,9 +746,13 @@ export default function ManualOrder() {
         </CardHeader>
         <CardContent>
           {fetchingOrders ? (
-            <div className="py-10 text-center text-muted-foreground">Loading manual orders...</div>
+            <div className="py-10 text-center text-muted-foreground">
+              Loading manual orders...
+            </div>
           ) : manualOrders.length === 0 ? (
-            <div className="py-10 text-center text-muted-foreground">No manual orders recorded yet</div>
+            <div className="py-10 text-center text-muted-foreground">
+              No manual orders recorded yet
+            </div>
           ) : (
             <div className="rounded-md border">
               <Table>
@@ -656,10 +771,14 @@ export default function ManualOrder() {
                 <TableBody>
                   {manualOrders.map((order) => (
                     <TableRow key={order._id}>
-                      <TableCell className="font-medium">{order.orderId}</TableCell>
+                      <TableCell className="font-medium">
+                        {order.orderId}
+                      </TableCell>
                       <TableCell>
                         <div className="font-medium">{order.customer.name}</div>
-                        <div className="text-xs text-muted-foreground">{order.customer.phone}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {order.customer.phone}
+                        </div>
                         <div className="text-xs text-muted-foreground">
                           {order.customer.city} • {order.customer.address}
                         </div>
@@ -667,15 +786,26 @@ export default function ManualOrder() {
                       <TableCell>
                         <div className="space-y-1">
                           {order.items.map((item, idx) => (
-                            <div key={item._id || `${item.productName || item.name}-${idx}`} className="text-xs">
-                              {item.productName || item.name || "Product"} × {item.quantity} (
+                            <div
+                              key={
+                                item._id ||
+                                `${item.productName || item.name}-${idx}`
+                              }
+                              className="text-xs"
+                            >
+                              {item.productName || item.name || "Product"} ×{" "}
+                              {item.quantity} (
                               {item.category || "Uncategorized"})
                             </div>
                           ))}
                         </div>
                       </TableCell>
-                      <TableCell className="font-semibold">৳{order.total.toFixed(2)}</TableCell>
-                      <TableCell className="uppercase text-sm">{order.paymentMethod}</TableCell>
+                      <TableCell className="font-semibold">
+                        ৳{order.total.toFixed(2)}
+                      </TableCell>
+                      <TableCell className="uppercase text-sm">
+                        {order.paymentMethod}
+                      </TableCell>
                       <TableCell>
                         <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
                           {order.status}
@@ -690,7 +820,12 @@ export default function ManualOrder() {
                           variant="outline"
                           size="sm"
                           className="flex items-center gap-2"
-                          onClick={() => handleDownloadPos(order._id, order.orderId || order._id)}
+                          onClick={() =>
+                            handleDownloadPos(
+                              order._id,
+                              order.orderId || order._id,
+                            )
+                          }
                           disabled={downloadingPosId === order._id}
                         >
                           {downloadingPosId === order._id ? (
@@ -724,7 +859,11 @@ type ProductComboboxProps = {
   searchProducts: (query: string) => Promise<AdminProductOption[]>;
 };
 
-function ProductCombobox({ item, onSelect, searchProducts }: ProductComboboxProps) {
+function ProductCombobox({
+  item,
+  onSelect,
+  searchProducts,
+}: ProductComboboxProps) {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -733,7 +872,10 @@ function ProductCombobox({ item, onSelect, searchProducts }: ProductComboboxProp
 
   useEffect(() => {
     if (!open) return;
-    const handler = window.setTimeout(() => setSearchQuery(inputValue.trim()), 300);
+    const handler = window.setTimeout(
+      () => setSearchQuery(inputValue.trim()),
+      300,
+    );
     return () => window.clearTimeout(handler);
   }, [inputValue, open]);
 
@@ -801,7 +943,9 @@ function ProductCombobox({ item, onSelect, searchProducts }: ProductComboboxProp
                 </span>
               </div>
             ) : (
-              <span className="text-muted-foreground">Search & select product</span>
+              <span className="text-muted-foreground">
+                Search & select product
+              </span>
             )}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
@@ -837,7 +981,9 @@ function ProductCombobox({ item, onSelect, searchProducts }: ProductComboboxProp
                     <Check
                       className={cn(
                         "mt-1 h-4 w-4 text-primary",
-                        item.productId === option._id ? "opacity-100" : "opacity-0"
+                        item.productId === option._id
+                          ? "opacity-100"
+                          : "opacity-0",
                       )}
                     />
                     <div className="flex flex-col">
@@ -847,7 +993,8 @@ function ProductCombobox({ item, onSelect, searchProducts }: ProductComboboxProp
                         {typeof option.price === "number"
                           ? option.price.toFixed(2)
                           : "0.00"}{" "}
-                        · Stock {typeof option.stock === "number" ? option.stock : "—"}
+                        · Stock{" "}
+                        {typeof option.stock === "number" ? option.stock : "—"}
                       </span>
                     </div>
                   </CommandItem>
@@ -863,7 +1010,9 @@ function ProductCombobox({ item, onSelect, searchProducts }: ProductComboboxProp
           {typeof item.productStock === "number" ? item.productStock : "—"}
         </p>
       ) : (
-        <p className="text-xs text-muted-foreground">Link a product to update stock</p>
+        <p className="text-xs text-muted-foreground">
+          Link a product to update stock
+        </p>
       )}
     </div>
   );

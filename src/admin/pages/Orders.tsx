@@ -152,13 +152,15 @@ export default function Orders() {
       await axios.patch(
         `${API_BASE}/api/admin/orders/${orderId}/status`,
         { status: newStatus },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       setOrders((prev) =>
         prev.map((order) =>
-          order._id === orderId ? { ...order, status: newStatus as any } : order
-        )
+          order._id === orderId
+            ? { ...order, status: newStatus as any }
+            : order,
+        ),
       );
 
       toast.success("Order status updated");
@@ -181,7 +183,7 @@ export default function Orders() {
         `${API_BASE}/api/admin/orders/${order._id}/pos`,
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       if (!response.ok) throw new Error("Failed to download POS");

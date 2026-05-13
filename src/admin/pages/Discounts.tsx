@@ -52,7 +52,7 @@ export default function Discounts() {
   useEffect(() => {
     if (searchQuery) {
       const filtered = products.filter((p) =>
-        p.name.toLowerCase().includes(searchQuery.toLowerCase())
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()),
       );
       setFilteredProducts(filtered);
     } else {
@@ -89,7 +89,7 @@ export default function Discounts() {
     if (!editingProduct) return;
 
     const discountValue = discountAmount ? Number(discountAmount) : 0;
-    
+
     if (discountValue < 0) {
       toast.error("Discount amount cannot be negative");
       return;
@@ -112,7 +112,7 @@ export default function Discounts() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       toast.success("Discount updated successfully");
       setIsDialogOpen(false);
@@ -120,12 +120,19 @@ export default function Discounts() {
       fetchProducts();
     } catch (error: any) {
       console.error("Error updating discount:", error);
-      toast.error(error?.response?.data?.message || "Failed to update discount");
+      toast.error(
+        error?.response?.data?.message || "Failed to update discount",
+      );
     }
   };
 
   const handleRemoveDiscount = async (product: Product) => {
-    if (!confirm("Are you sure you want to remove the discount from this product?")) return;
+    if (
+      !confirm(
+        "Are you sure you want to remove the discount from this product?",
+      )
+    )
+      return;
 
     try {
       const token = localStorage.getItem("admin_token");
@@ -139,7 +146,7 @@ export default function Discounts() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       toast.success("Discount removed successfully");
       fetchProducts();
@@ -201,7 +208,9 @@ export default function Discounts() {
         <CardContent>
           {filteredProducts.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              {searchQuery ? "No products found matching your search" : "No products found"}
+              {searchQuery
+                ? "No products found matching your search"
+                : "No products found"}
             </div>
           ) : (
             <div className="rounded-md border">
@@ -220,7 +229,10 @@ export default function Discounts() {
                 <TableBody>
                   {filteredProducts.map((product) => {
                     const discount = product.discountAmount || 0;
-                    const discountedPrice = calculateDiscountedPrice(product.price, discount);
+                    const discountedPrice = calculateDiscountedPrice(
+                      product.price,
+                      discount,
+                    );
                     const hasDiscount = discount > 0 && product.isOnSale;
 
                     return (
@@ -243,8 +255,12 @@ export default function Discounts() {
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell className="uppercase">{product.category}</TableCell>
-                        <TableCell className="font-semibold">৳{product.price.toFixed(2)}</TableCell>
+                        <TableCell className="uppercase">
+                          {product.category}
+                        </TableCell>
+                        <TableCell className="font-semibold">
+                          ৳{product.price.toFixed(2)}
+                        </TableCell>
                         <TableCell>
                           {hasDiscount ? (
                             <span className="text-red-600 font-semibold">
@@ -269,7 +285,9 @@ export default function Discounts() {
                               ON SALE
                             </span>
                           ) : (
-                            <span className="text-muted-foreground text-sm">Regular</span>
+                            <span className="text-muted-foreground text-sm">
+                              Regular
+                            </span>
                           )}
                         </TableCell>
                         <TableCell>
@@ -308,7 +326,9 @@ export default function Discounts() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {editingProduct ? `Set Discount for ${editingProduct.name}` : "Add Discount"}
+              {editingProduct
+                ? `Set Discount for ${editingProduct.name}`
+                : "Add Discount"}
             </DialogTitle>
             <DialogDescription>
               Set a discount amount to put this product on sale
@@ -352,7 +372,8 @@ export default function Discounts() {
                 <span>Put product on sale</span>
               </Label>
               <p className="text-xs text-muted-foreground">
-                When enabled, the product will show "ON SALE" badge and discounted price
+                When enabled, the product will show "ON SALE" badge and
+                discounted price
               </p>
             </div>
             {discountAmount && Number(discountAmount) > 0 && (
@@ -361,7 +382,7 @@ export default function Discounts() {
                   Discounted Price: ৳
                   {calculateDiscountedPrice(
                     editingProduct?.price || 0,
-                    Number(discountAmount) || 0
+                    Number(discountAmount) || 0,
                   ).toFixed(2)}
                 </p>
                 <p className="text-xs text-green-600 mt-1">
@@ -387,4 +408,3 @@ export default function Discounts() {
     </div>
   );
 }
-
