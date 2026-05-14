@@ -27,6 +27,16 @@ export default function Home() {
     };
   };
 
+  const [showDbNotice, setShowDbNotice] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowDbNotice(false);
+    }, 9000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   // Load featured products from backend
   async function loadFeatured() {
     try {
@@ -36,7 +46,9 @@ export default function Home() {
       if (!res.ok) {
         const errorText = await res.text();
         console.error("API Error Response:", errorText);
-        throw new Error(`Failed to load featured products: ${res.status} ${res.statusText}`);
+        throw new Error(
+          `Failed to load featured products: ${res.status} ${res.statusText}`,
+        );
       }
       const data = await res.json();
       console.log("Featured products loaded:", data);
@@ -55,7 +67,9 @@ export default function Home() {
 
   // Remove from featured
   async function removeFeatured(id: string) {
-    if (!confirm("Are you sure you want to remove this product from featured?")) {
+    if (
+      !confirm("Are you sure you want to remove this product from featured?")
+    ) {
       return;
     }
 
@@ -91,6 +105,17 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
+      {/* Floating DB Notice */}
+      {showDbNotice && (
+        <div className="fixed bottom-5 right-5 z-50 animate-in fade-in slide-in-from-bottom-5 duration-500">
+          <div className="bg-black/85 text-white px-5 py-4 rounded-xl shadow-2xl max-w-sm border border-white/10 backdrop-blur-sm">
+            <p className="text-sm leading-relaxed">
+              Products may take a few seconds to load due to database inactivity
+              on the free hosting tier.
+            </p>
+          </div>
+        </div>
+      )}
       {/* Hero Section - Carousel */}
       <HeroCarousel />
 
