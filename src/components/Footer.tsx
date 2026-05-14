@@ -1,5 +1,12 @@
 import { Link } from "react-router-dom";
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
+import {
+  Facebook,
+  Instagram,
+  Twitter,
+  Mail,
+  Phone,
+  MapPin,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -26,10 +33,15 @@ export const Footer = () => {
               MASAN <span className="text-accent">NATURAL BASKET</span>
             </h3>
             <p className="text-primary-foreground/80 text-sm mb-4">
-              Premium organic products for a healthier lifestyle. 100% natural, chemical-free and sustainably sourced.
+              Premium organic products for a healthier lifestyle. 100% natural,
+              chemical-free and sustainably sourced.
             </p>
             <div className="flex gap-3">
-              <Button variant="ghost" size="icon" className="hover:bg-accent hover:text-accent-foreground">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:bg-accent hover:text-accent-foreground"
+              >
                 <Facebook className="h-4 w-4" />
               </Button>
               {/* <Button variant="ghost" size="icon" className="hover:bg-accent hover:text-accent-foreground">
@@ -45,10 +57,35 @@ export const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/about" className="hover:text-accent transition-colors">About Us</Link></li>
-              <li><Link to="/shop" className="hover:text-accent transition-colors">Shop</Link></li>
-              <li><Link to="/contact" className="hover:text-accent transition-colors">Contact</Link></li>
-              <li><a href="#" className="hover:text-accent transition-colors">Terms & Conditions</a></li>
+              <li>
+                <Link
+                  to="/about"
+                  className="hover:text-accent transition-colors"
+                >
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/shop"
+                  className="hover:text-accent transition-colors"
+                >
+                  Shop
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/contact"
+                  className="hover:text-accent transition-colors"
+                >
+                  Contact
+                </Link>
+              </li>
+              <li>
+                <a href="#" className="hover:text-accent transition-colors">
+                  Terms & Conditions
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -58,7 +95,7 @@ export const Footer = () => {
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-2">
                 <Phone className="h-4 w-4 mt-0.5" />
-                <span>+88 01750115542</span>
+                <span>+88 01310903819</span>
               </li>
               <li className="flex items-start gap-2">
                 <Mail className="h-4 w-4 mt-0.5" />
@@ -94,7 +131,10 @@ export const Footer = () => {
         </div>
 
         <div className="border-t border-primary-foreground/20 mt-8 pt-6 text-center text-sm text-primary-foreground/70">
-          <p>&copy; {new Date().getFullYear()} Masan Natural Basket. All rights reserved.</p>
+          <p>
+            &copy; {new Date().getFullYear()} Masan Natural Basket. All rights
+            reserved.
+          </p>
         </div>
       </div>
     </footer>

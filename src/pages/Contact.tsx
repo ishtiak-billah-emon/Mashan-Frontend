@@ -29,7 +29,12 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.subject ||
+      !formData.message
+    ) {
       toast.error("Please fill in all fields");
       return;
     }
@@ -41,19 +46,22 @@ export default function Contact() {
       setFormData({ name: "", email: "", subject: "", message: "" });
     } catch (error: any) {
       console.error("Error sending message:", error);
-      toast.error(error?.response?.data?.message || "Failed to send message. Please try again.");
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to send message. Please try again.",
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const whatsappNumber = "8801750115542"; // Replace with actual number
+  const whatsappNumber = "8801310903819"; // Replace with actual number
 
   const faqs = [
     {
@@ -90,8 +98,8 @@ export default function Contact() {
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-primary mb-4">Get in Touch</h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Have questions? We'd love to hear from you. Send us a message and we'll respond as
-            soon as possible.
+            Have questions? We'd love to hear from you. Send us a message and
+            we'll respond as soon as possible.
           </p>
         </div>
 
@@ -173,7 +181,9 @@ export default function Contact() {
                   <div>
                     <h3 className="font-semibold mb-1">Phone</h3>
                     <p className="text-muted-foreground">+880 1750115542</p>
-                    <p className="text-sm text-muted-foreground">Mon-Sat, 9AM-10PM</p>
+                    <p className="text-sm text-muted-foreground">
+                      Mon-Sat, 9AM-10PM
+                    </p>
                   </div>
                 </div>
 
@@ -183,8 +193,12 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Email</h3>
-                    <p className="text-muted-foreground">info.masannaturalbasket@gmail.com</p>
-                    <p className="text-sm text-muted-foreground">We'll reply within 24hrs</p>
+                    <p className="text-muted-foreground">
+                      info.masannaturalbasket@gmail.com
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      We'll reply within 24hrs
+                    </p>
                   </div>
                 </div>
 
