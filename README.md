@@ -1,108 +1,96 @@
-# Welcome to your Lovable project
+# 🛒 Mashan Natural Basket
 
-## Project info
+A modern organic eCommerce platform built for selling natural and healthy products online.  
+Mashan Natural Basket focuses on delivering a clean shopping experience with smooth UI, fast performance and easy product management.
 
-**URL**: https://lovable.dev/projects/616fbbc1-a917-45e8-be7b-49d9e3c65948
+---
 
-## How can I edit this code?
+## 🌿 About The Project
 
-There are several ways of editing your application.
+Mashan Natural Basket is an online organic food and grocery platform where users can:
 
-**Use Lovable**
+- Browse natural and organic products
+- View detailed product information
+- Add products to cart
+- Place orders using Cash on Delivery
+- Experience responsive and modern UI
+- Enjoy smooth animations and optimized performance
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/616fbbc1-a917-45e8-be7b-49d9e3c65948) and start prompting.
+The project was designed with a focus on:
 
-Changes made via Lovable will be committed automatically to this repo.
+- Professional frontend architecture
+- Scalable component structure
+- User-friendly shopping experience
+- Clean and maintainable codebase
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🚀 Features
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 🛍️ Customer Features
 
-Follow these steps:
+- Product listing page
+- Product details page
+- Shopping cart functionality
+- Checkout system
+- Cash on Delivery support
+- Responsive design for all devices
+- Loading states & notifications
+- Search & filtering system
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### 🎨 UI/UX Features
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- Modern clean design
+- Smooth transitions & animations
+- Mobile-first responsive layout
+- Professional product cards
+- Interactive user experience
 
-# Step 3: Install the necessary dependencies.
-npm i
+### ⚡ Performance Features
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+- Optimized rendering
+- Fast page navigation
+- Lazy loading support
+- Efficient state management
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🧑‍💻 Tech Stack
 
-**Use GitHub Codespaces**
+### Frontend
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
+- React.js
+- Next.js
 - TypeScript
-- React
-- shadcn-ui
 - Tailwind CSS
 
-## Environment Setup
+### Backend / Database
 
-Before running the project, create a `.env` file in the root directory:
+- Node.js
+- Express.js
+- MongoDB
+
+### Other Tools
+
+- Redux Toolkit
+- Axios
+- React Icons
+- Toast Notifications
+
+---
+
+## 📂 Project Structure
 
 ```bash
-# Copy the example file
-cp .env.example .env
+src/
+│
+├── app/
+├── components/
+├── pages/
+├── hooks/
+├── redux/
+├── services/
+├── utils/
+├── styles/
+└── assets/
 ```
-
-Or create `.env` manually with:
-```
-VITE_API_URL=https://api-mashan-naturalbasket.onrender.com
-```
-
-For local development, use:
-```
-VITE_API_URL=http://localhost:5000
-```
-
-## How can I deploy this project?
-
-### Option 1: Deploy via Lovable
-Simply open [Lovable](https://lovable.dev/projects/616fbbc1-a917-45e8-be7b-49d9e3c65948) and click on Share -> Publish.
-
-### Option 2: Deploy to Vercel/Netlify/Render
-
-1. **Build the project:**
-   ```bash
-   npm run build
-   ```
-
-2. **Set environment variable in your hosting platform:**
-   - Variable name: `VITE_API_URL`
-   - Variable value: `https://api-mashan-naturalbasket.onrender.com`
-
-3. **Deploy the `dist` folder** to your hosting platform.
-
-**Note:** Make sure to set the `VITE_API_URL` environment variable in your hosting platform's environment settings.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
